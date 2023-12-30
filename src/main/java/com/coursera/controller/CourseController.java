@@ -55,6 +55,7 @@ public class CourseController {
     @PostMapping
     public String saveCourse(Model model, @ModelAttribute Course course) {
         log.debug("saveCourse started");
+        course.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
         courseService.saveCourse(course);
         return "redirect:/courses";
     }

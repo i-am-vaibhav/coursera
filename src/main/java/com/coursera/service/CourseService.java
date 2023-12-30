@@ -52,7 +52,6 @@ public class CourseService {
 
     public Course saveCourse(Course course) {
         log.debug("saveCourse with :: {}", course);
-        course.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
         Course save = courseRepository.save(course);
         log.debug("saveCourse ended with :: {}", save);
         return save;
