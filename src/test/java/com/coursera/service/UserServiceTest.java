@@ -46,7 +46,7 @@ class UserServiceTest {
 
     @Test
     void getUser() {
-        Optional<User> userOptional = Optional.of(new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.STUDENT));
+        Optional<User> userOptional = Optional.of(new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.STUDENT,false));
         when(userRepository.findById(Mockito.any())).thenReturn(userOptional);
         User user = userService.getUser(Optional.of(BigDecimal.ONE));
         assertNotNull(user);
@@ -65,25 +65,25 @@ class UserServiceTest {
 
     @Test
     void saveUser() {
-        User mockUser = new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.STUDENT);
+        User mockUser = new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.STUDENT,false);
         when(userRepository.save(Mockito.any(User.class))).thenReturn(mockUser);
-        User user = new User(null,"Vaibhav","V@gmail.com","Vtest", Role.STUDENT);
+        User user = new User(null,"Vaibhav","V@gmail.com","Vtest", Role.STUDENT, false);
         User user1 = userService.saveUser(user);
         assertNotNull(user1.getId());
     }
 
     @Test
     void saveUserUpdate() {
-        User mockUser = new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.STUDENT);
+        User mockUser = new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.STUDENT, false);
         when(userRepository.save(Mockito.any(User.class))).thenReturn(mockUser);
-        User user = new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","test", Role.STUDENT);
+        User user = new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","test", Role.STUDENT,false);
         User user1 = userService.saveUser(user);
         assertNotEquals(user1.getPassword(),user.getPassword());
     }
 
     @Test
     void getUserWithMockedData() {
-        Optional<User> userOptional = Optional.of(new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.STUDENT));
+        Optional<User> userOptional = Optional.of(new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.STUDENT, false));
         when(userRepository.findByUserName(Mockito.any())).thenReturn(userOptional);
         User user = userService.getUser("Vaibhav");
         assertNotNull(user);

@@ -51,9 +51,9 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         this.userList = new ArrayList<>();
-        this.userList.add(new User(BigDecimal.ONE, "user1","user1@gmail.com", "pwd1",Role.STUDENT));
-        this.userList.add(new User(new BigDecimal(2), "user2","2@gmail.com", "pwd2",Role.STUDENT));
-        this.userList.add(new User(new BigDecimal(3), "user3","3@gmail.com", "pwd3", Role.STUDENT));
+        this.userList.add(new User(BigDecimal.ONE, "user1","user1@gmail.com", "pwd1",Role.STUDENT,false));
+        this.userList.add(new User(new BigDecimal(2), "user2","2@gmail.com", "pwd2",Role.STUDENT,false));
+        this.userList.add(new User(new BigDecimal(3), "user3","3@gmail.com", "pwd3", Role.STUDENT,false));
     }
 
     @Test
@@ -68,7 +68,7 @@ class UserControllerTest {
 
     @Test
     void getUserDetailsPage() throws Exception {
-        mock = new User(BigDecimal.ONE, "user1", "user1@gmail.com", "pwd1", Role.STUDENT);
+        mock = new User(BigDecimal.ONE, "user1", "user1@gmail.com", "pwd1", Role.STUDENT,false);
         BDDMockito.given(userService.getUser(Optional.ofNullable(BDDMockito.any()))).willReturn(mock);
         MvcResult users = mockMvc.perform(MockMvcRequestBuilders.get(URI.create("/users/1.0")))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -97,7 +97,7 @@ class UserControllerTest {
 
     @Test
     void updateUserPage() throws Exception {
-        mock = new User(BigDecimal.ONE, "user1", "user1@gmail.com", "pwd1", Role.STUDENT);
+        mock = new User(BigDecimal.ONE, "user1", "user1@gmail.com", "pwd1", Role.STUDENT, false);
         BDDMockito.given(userService.getUser(Optional.ofNullable(BDDMockito.any()))).willReturn(mock);
         MvcResult users = mockMvc.perform(MockMvcRequestBuilders.get(URI.create("/users/1.0/update")))
                 .andExpect(MockMvcResultMatchers.status().isOk())

@@ -1,12 +1,12 @@
 package com.coursera.exception;
 
-public class CourseNotFoundException extends RuntimeException{
+public class CourseNotFoundException extends RuntimeException {
 
-     public CourseNotFoundException(){
+    public CourseNotFoundException() {
 
-     }
+    }
 
-    public CourseNotFoundException(String message){
+    public CourseNotFoundException(String message) {
         super(message);
     }
 

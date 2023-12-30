@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ErrorController {
 
     @ExceptionHandler(AccessDeniedException.class)
-    public String accessDeniedException(Model model){
-        model.addAttribute("message","Access Denied !");
+    public String accessDeniedException(Model model) {
+        model.addAttribute("message", "Access Denied !");
         return "error";
     }
 
     @ExceptionHandler({UsernameNotFoundException.class, CourseNotFoundException.class})
-    public String notFoundExe(Model model,Exception e){
-        model.addAttribute("message",e.getMessage());
+    public String notFoundExe(Model model, Exception e) {
+        model.addAttribute("message", e.getMessage());
         return "error";
     }
 }

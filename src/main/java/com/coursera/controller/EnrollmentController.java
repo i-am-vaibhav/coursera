@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/enrollments")
-@Secured("ROLE_ADMIN")
+@Secured({"ROLE_ADMIN", "ROLE_CONTRIBUTER"})
 @Slf4j
 public class EnrollmentController {
 
@@ -29,27 +29,27 @@ public class EnrollmentController {
     }
 
     @GetMapping
-    public String getStudentEnrollments(Model model){
-        model.addAttribute("enrollments",enrollmentService.getEnrollments());
-        return ENROLL_FOLDER +"enrollments";
+    public String getStudentEnrollments(Model model) {
+        model.addAttribute("enrollments", enrollmentService.getEnrollments());
+        return ENROLL_FOLDER + "enrollments";
     }
 
     @GetMapping("/{name}")
-    public String viewStudentEnrollment(Model model, @PathVariable String name){
+    public String viewStudentEnrollment(Model model, @PathVariable String name) {
         List<Course> enrollmentsByUserName = enrollmentService.getEnrollmentsByUserName(name);
-        if(enrollmentsByUserName.isEmpty())
+        if (enrollmentsByUserName.isEmpty())
             return "redirect:/enrollments";
         model.addAttribute("courses", enrollmentsByUserName);
-        model.addAttribute("name",name);
+        model.addAttribute("name", name);
         return ENROLL_FOLDER + "showEnrollment";
     }
 
     @GetMapping("/{id}/disenroll/{name}")
-    public String disenrollCourse(Model model,@PathVariable Optional<BigDecimal> id,
-                               @PathVariable String name){
+    public String disenrollCourse(Model model, @PathVariable Optional<BigDecimal> id,
+                                  @PathVariable String name) {
         log.debug("disenrollCourse started");
-        enrollmentService.disenrollCourse(name,id);
-        return "redirect:/enrollments/"+name;
+        enrollmentService.disenrollCourse(name, id);
+        return "redirect:/enrollments/" + name;
     }
 
 }

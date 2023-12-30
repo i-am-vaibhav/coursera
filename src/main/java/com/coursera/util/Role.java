@@ -1,5 +1,5 @@
 package com.coursera.util;
 
 public enum Role {
-    ADMIN,STUDENT
+    ADMIN, STUDENT, CONTRIBUTER
 }

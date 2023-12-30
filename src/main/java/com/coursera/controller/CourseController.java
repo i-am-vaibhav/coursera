@@ -17,7 +17,7 @@ import java.util.Optional;
 @Slf4j
 @Controller
 @RequestMapping("/courses")
-@Secured({"ROLE_ADMIN"})
+@Secured({"ROLE_ADMIN", "ROLE_CONTRIBUTER"})
 public class CourseController {
 
     private static final String COURSE_FOLDER = "course/";
@@ -29,31 +29,31 @@ public class CourseController {
     }
 
     @GetMapping
-    @Secured({"ROLE_STUDENT","ROLE_ADMIN"})
-    public String getCoursesPage(Model model){
+    @Secured({"ROLE_STUDENT", "ROLE_ADMIN", "ROLE_CONTRIBUTER"})
+    public String getCoursesPage(Model model) {
         log.debug("getCoursesPage started");
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        model.addAttribute("courses",courseService.getCourses(user));
+        model.addAttribute("courses", courseService.getCourses(user));
         return COURSE_FOLDER + "courses";
     }
 
     @GetMapping("/create")
-    public String getCoursesCreatePage(Model model){
+    public String getCoursesCreatePage(Model model) {
         log.debug("getCoursesCreatePage started");
-        model.addAttribute("course",new Course());
+        model.addAttribute("course", new Course());
         return COURSE_FOLDER + "course";
     }
 
     @GetMapping("/{id}/update")
     public String getCoursesUpdatePage(Model model,
-                                       @PathVariable Optional<BigDecimal> id){
+                                       @PathVariable Optional<BigDecimal> id) {
         log.debug("getCoursesUpdatePage started");
-        model.addAttribute("course",courseService.getCourse(id));
+        model.addAttribute("course", courseService.getCourse(id));
         return COURSE_FOLDER + "course";
     }
 
     @PostMapping
-    public String saveCourse(Model model, @ModelAttribute Course course){
+    public String saveCourse(Model model, @ModelAttribute Course course) {
         log.debug("saveCourse started");
         courseService.saveCourse(course);
         return "redirect:/courses";
@@ -61,15 +61,15 @@ public class CourseController {
 
     @GetMapping("/{id}/enroll")
     @Secured("ROLE_STUDENT")
-    public String enrollCourse(Model model,@PathVariable Optional<BigDecimal> id){
+    public String enrollCourse(Model model, @PathVariable Optional<BigDecimal> id) {
         log.debug("enrollCourse started");
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        courseService.enrollCourse(userName,id);
+        courseService.enrollCourse(userName, id);
         return "redirect:/home";
     }
 
     @GetMapping("/{id}/activate")
-    public String activateCourse(Model model,@PathVariable Optional<BigDecimal> id){
+    public String activateCourse(Model model, @PathVariable Optional<BigDecimal> id) {
         log.debug("activateCourse started");
         courseService.activateCourse(id);
         return "redirect:/courses";

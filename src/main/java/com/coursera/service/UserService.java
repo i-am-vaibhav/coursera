@@ -30,21 +30,21 @@ public class UserService {
         this.courseRepository = courseRepository;
     }
 
-    public List<User> getUsers(){
+    public List<User> getUsers() {
         return userRepository.findAll();
     }
 
     public User getUser(Optional<BigDecimal> id) {
         return userRepository.findById(id.orElseThrow(IllegalArgumentException::new))
-                .orElseThrow(()->new UsernameNotFoundException("User not found with "+id.get()));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with " + id.get()));
     }
 
     public User getUser(String userName) {
         return userRepository.findByUserName(userName)
-                .orElseThrow(()->new UsernameNotFoundException("User not found with "+userName));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with " + userName));
     }
 
-    public User saveUser(User user){
+    public User saveUser(User user) {
         return userRepository.save(user);
     }
 
@@ -52,7 +52,7 @@ public class UserService {
         userRepository.deleteById(id.orElseThrow(IllegalArgumentException::new));
     }
 
-    public List<Course> getEnrolledCourses(){
+    public List<Course> getEnrolledCourses() {
         User user = getUser(SecurityContextHolder.getContext().getAuthentication().getName());
         List<UserCourseDtl> userCourseDtls = userCourseDtlRepository.findByUserId(user.getId());
         List<BigDecimal> list = userCourseDtls.stream().map(UserCourseDtl::getCourseId).collect(Collectors.toList());

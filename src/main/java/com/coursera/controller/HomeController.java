@@ -18,24 +18,22 @@ public class HomeController {
     }
 
     @GetMapping("/login")
-    public String loginPage(){
+    public String loginPage() {
         return "login";
     }
 
 
     @GetMapping("/home")
-    @Secured({"ROLE_ADMIN","ROLE_STUDENT"})
-    public String homePage(Model model){
-        model.addAttribute("courses",userService.getEnrolledCourses());
+    public String homePage(Model model) {
+        model.addAttribute("courses", userService.getEnrolledCourses());
         return "home";
     }
 
 
     @GetMapping("/profile")
-    @Secured({"ROLE_ADMIN","ROLE_STUDENT"})
-    public String profilePage(Model model){
+    public String profilePage(Model model) {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        model.addAttribute("user",userService.getUser(userName));
+        model.addAttribute("user", userService.getUser(userName));
         return "user/viewUser";
     }
 }

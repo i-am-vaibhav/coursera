@@ -8,8 +8,8 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @EnableAspectJAutoProxy
 public class CourseraApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CourseraApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(CourseraApplication.class, args);
+    }
 
 }

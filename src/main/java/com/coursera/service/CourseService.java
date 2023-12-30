@@ -6,8 +6,10 @@ import com.coursera.model.User;
 import com.coursera.model.UserCourseDtl;
 import com.coursera.repository.CourseRepository;
 import com.coursera.repository.UserCourseDtlRepository;
+import com.coursera.security.AuthenticatedUser;
 import com.coursera.util.Role;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -34,12 +36,14 @@ public class CourseService {
         this.userService = userService;
     }
 
-    public List<Course> getCourses(org.springframework.security.core.userdetails.User user){
+    public List<Course> getCourses(org.springframework.security.core.userdetails.User user) {
         log.debug("getCourses");
         List<Course> courseList = null;
-        if(user!=null && user.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_STUDENT"))){
+        if (user.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_STUDENT"))) {
             courseList = courseRepository.findByActiveTrue();
-        }else {
+        } else if (user.getAuthorities().stream().anyMatch(r -> "ROLE_CONTRIBUTER".equals(r.getAuthority()))) {
+            courseList = courseRepository.findByCreatedBy(user.getUsername());
+        } else {
             courseList = courseRepository.findAll();
         }
         log.debug("getCourses ended");
@@ -47,26 +51,27 @@ public class CourseService {
     }
 
     public Course saveCourse(Course course) {
-        log.debug("saveCourse with :: {}",course);
+        log.debug("saveCourse with :: {}", course);
+        course.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
         Course save = courseRepository.save(course);
-        log.debug("saveCourse ended with :: {}",save);
+        log.debug("saveCourse ended with :: {}", save);
         return save;
     }
 
     public Course getCourse(Optional<BigDecimal> id) {
-        log.debug("getCourse with :: {}",id);
+        log.debug("getCourse with :: {}", id);
         Course course = courseRepository.findById(id.orElseThrow(IllegalArgumentException::new))
                 .orElseThrow(() -> new CourseNotFoundException("Course not found with " + id.get()));
-        log.debug("getCourse ended with :: {}",course);
+        log.debug("getCourse ended with :: {}", course);
         return course;
     }
 
     public void enrollCourse(String userName, Optional<BigDecimal> id) {
-        log.debug("enrollCourse with :: {} ,{}",userName,id);
+        log.debug("enrollCourse with :: {} ,{}", userName, id);
         User user = userService.getUser(userName);
         Course course = getCourse(id);
         UserCourseDtl userCourseDtl =
-                userCourseDtlRepository.findByUserIdAndCourseId(user.getId(),course.getId())
+                userCourseDtlRepository.findByUserIdAndCourseId(user.getId(), course.getId())
                         .orElse(new UserCourseDtl());
         if (userCourseDtl.getId() == null) {
             userCourseDtl.setCourseId(course.getId());
@@ -81,7 +86,7 @@ public class CourseService {
     }
 
     public void activateCourse(Optional<BigDecimal> id) {
-        log.debug("activateCourse started with :: {}",id);
+        log.debug("activateCourse started with :: {}", id);
         Course course = getCourse(id);
         course.setActive(!course.getActive());
         courseRepository.save(course);

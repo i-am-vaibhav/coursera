@@ -31,4 +31,6 @@ public class Course {
 
     private Boolean active = true;
 
+    private String createdBy;
+
 }

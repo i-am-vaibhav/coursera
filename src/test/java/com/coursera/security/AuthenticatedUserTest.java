@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class AuthenticatedUserTest {
     @Test
     void getUserTest() {
-        User user=new User(BigDecimal.ONE,"Name","name@gmail.com","test", Role.STUDENT);
+        User user=new User(BigDecimal.ONE,"Name","name@gmail.com","test", Role.STUDENT,false);
         AuthenticatedUser authenticatedUser = new AuthenticatedUser(user);
         assertNotNull(authenticatedUser.getUser());
     }

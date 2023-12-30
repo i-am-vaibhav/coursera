@@ -13,8 +13,8 @@ public class AuthenticatedUser extends org.springframework.security.core.userdet
 
     private final User user;
 
-    public AuthenticatedUser(User user){
-        super(user.getUserName(),user.getPassword(),getAuthorities(user));
+    public AuthenticatedUser(User user) {
+        super(user.getUserName(), user.getPassword(), getAuthorities(user));
         this.user = user;
     }
 
@@ -22,7 +22,7 @@ public class AuthenticatedUser extends org.springframework.security.core.userdet
         Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         try {
             grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().toString()));
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalArgumentException();
         }
         return grantedAuthorities;

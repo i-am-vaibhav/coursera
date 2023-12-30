@@ -31,11 +31,11 @@
                             <span class="ms-1 d-none d-sm-inline"><i class="fa-solid fa-users fa-bounce"></i>&nbsp;Users</span></a>
                     </li>
                     <li>
-                        <a th:href="@{/courses}" sec:authorize="hasAnyAuthority('ROLE_ADMIN','ROLE_STUDENT')" class="icon-link nav-link link-light px-0 align-middle">
+                        <a th:href="@{/courses}" sec:authorize="hasAnyAuthority('ROLE_ADMIN','ROLE_STUDENT','ROLE_CONTRIBUTER')" class="icon-link nav-link link-light px-0 align-middle">
                             <span class="ms-1 d-none d-sm-inline"><i class="fa-solid fa-receipt fa-bounce"></i>&nbsp;Courses</span> </a>
                     </li>
                     <li>
-                        <a th:href="@{/enrollments}" sec:authorize="hasAnyAuthority('ROLE_ADMIN')" class="icon-link nav-link link-light px-0 align-middle">
+                        <a th:href="@{/enrollments}" sec:authorize="hasAnyAuthority('ROLE_ADMIN','ROLE_CONTRIBUTER')" class="icon-link nav-link link-light px-0 align-middle">
                             <span class="ms-1 d-none d-sm-inline"><i class="fa-solid fa-id-card fa-bounce"></i>&nbsp;Manage Enrollments</span> </a>
                     </li>
                     <li>

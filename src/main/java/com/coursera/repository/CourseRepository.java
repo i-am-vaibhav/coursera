@@ -12,4 +12,6 @@ import java.util.List;
 public interface CourseRepository extends JpaRepository<Course, BigDecimal> {
 
     List<Course> findByActiveTrue();
+
+    List<Course> findByCreatedBy(String createdBy);
 }

@@ -24,37 +24,37 @@ public class UserController {
     }
 
     @GetMapping
-    public String getUsersPage(Model model){
+    public String getUsersPage(Model model) {
         model.addAttribute("users", userService.getUsers());
         return USER_FOLDER + "users";
     }
 
     @GetMapping("/{id}")
-    public String getUserDetailsPage(Model model, @PathVariable("id") Optional<BigDecimal> id){
+    public String getUserDetailsPage(Model model, @PathVariable("id") Optional<BigDecimal> id) {
         model.addAttribute("user", userService.getUser(id));
         return USER_FOLDER + "viewUser";
     }
 
     @GetMapping("/create")
-    public String createUserPage(Model model){
+    public String createUserPage(Model model) {
         model.addAttribute("user", new User());
         return USER_FOLDER + "user";
     }
 
     @GetMapping("/{id}/update")
-    public String updateUserPage(Model model, @PathVariable("id") Optional<BigDecimal> id){
+    public String updateUserPage(Model model, @PathVariable("id") Optional<BigDecimal> id) {
         model.addAttribute("user", userService.getUser(id));
         return USER_FOLDER + "user";
     }
 
     @GetMapping("/{id}/delete")
-    public String deleteUser(Model model, @PathVariable("id") Optional<BigDecimal> id){
+    public String deleteUser(Model model, @PathVariable("id") Optional<BigDecimal> id) {
         userService.deleteUser(id);
         return "redirect:/users";
     }
 
     @PostMapping
-    public String saveUser(Model model, @ModelAttribute User user){
+    public String saveUser(Model model, @ModelAttribute User user) {
         userService.saveUser(user);
         return "redirect:/users";
     }

@@ -26,11 +26,11 @@ public class AspectLogging {
 
     @Around("execution(* com.coursera.repository.*.*(..)) ")
     public Object logging(ProceedingJoinPoint point) {
-        Object obj=null;
+        Object obj = null;
         try {
-            log.debug("start-time for {} is {}",point.getSignature().toShortString(),LocalDateTime.now());
+            log.debug("start-time for {} is {}", point.getSignature().toShortString(), LocalDateTime.now());
             obj = point.proceed();
-            log.debug("end-time for {} is {}",point.getSignature().toShortString(),LocalDateTime.now());
+            log.debug("end-time for {} is {}", point.getSignature().toShortString(), LocalDateTime.now());
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
@@ -39,9 +39,9 @@ public class AspectLogging {
 
     @AfterReturning(value = "execution(* com.coursera.security.CustomUserDetailsService.loadUserByUsername(..)) ",
             returning = "user")
-    public void authenticationNotification(JoinPoint joinPoint, AuthenticatedUser user){
-        if(user!=null){
-            sendMail(user);
+    public void authenticationNotification(JoinPoint joinPoint, AuthenticatedUser user) {
+        if (user != null) {
+            //sendMail(user);
         }
     }
 

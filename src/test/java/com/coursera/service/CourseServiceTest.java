@@ -32,21 +32,21 @@ class CourseServiceTest {
 
     @Test
     void getCourses() {
-        AuthenticatedUser user = new AuthenticatedUser(new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.STUDENT));
+        AuthenticatedUser user = new AuthenticatedUser(new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.STUDENT, false));
         List<Course> courses = courseService.getCourses(user);
         assertNotNull(courses);
     }
 
     @Test
     void getCoursesAdmin() {
-        AuthenticatedUser user = new AuthenticatedUser(new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.ADMIN));
+        AuthenticatedUser user = new AuthenticatedUser(new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.ADMIN, false));
         List<Course> courses = courseService.getCourses(user);
         assertNotNull(courses);
     }
 
     @Test
     void getCoursesWithData() {
-        AuthenticatedUser user = new AuthenticatedUser(new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.STUDENT));
+        AuthenticatedUser user = new AuthenticatedUser(new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.STUDENT,false));
         List<Course> expected = new ArrayList<>();
         expected.add(new Course());
         when(courseRepository.findByActiveTrue()).thenReturn(expected);
@@ -56,7 +56,7 @@ class CourseServiceTest {
 
     @Test
     void getCoursesWithDataAdmin() {
-        AuthenticatedUser user = new AuthenticatedUser(new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.ADMIN));
+        AuthenticatedUser user = new AuthenticatedUser(new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.ADMIN, false));
         List<Course> expected = new ArrayList<>();
         expected.add(new Course());
         when(courseRepository.findAll()).thenReturn(expected);
@@ -66,24 +66,24 @@ class CourseServiceTest {
 
     @Test
     void saveCourse() {
-        Course mockCourse = new Course(BigDecimal.ONE,"cat1","Vname", "Desc","",true);
+        Course mockCourse = new Course(BigDecimal.ONE,"cat1","Vname", "Desc","",true,"Vaibhav");
         when(courseRepository.save(Mockito.any(Course.class))).thenReturn(mockCourse);
-        Course course = new Course(null,"cat1","Vname", "Desc","",true);
+        Course course = new Course(null,"cat1","Vname", "Desc","",true,"Vaibhav");
         Course course1 = courseService.saveCourse(course);
         assertNotNull(course1.getId());
     }
 
     @Test
     void saveCourseUpdate() {
-        Course mockCourse = new Course(BigDecimal.ONE,"cat1","Vname1", "Desc","",true);
+        Course mockCourse = new Course(BigDecimal.ONE,"cat1","Vname1", "Desc","",true,"Vaibhav");
         when(courseRepository.save(Mockito.any(Course.class))).thenReturn(mockCourse);
-        Course course = new Course(null,"cat1","Vname", "Desc","",true);
+        Course course = new Course(null,"cat1","Vname", "Desc","",true,"Vaibhav");
         Course course1 = courseService.saveCourse(course);
         assertNotEquals(course.getName(),course1.getName());
     }
     @Test
     void getCourse() {
-        Optional<Course> courseOptional = Optional.of(new Course(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest","",true));
+        Optional<Course> courseOptional = Optional.of(new Course(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest","",true,"Vaibhav"));
         when(courseRepository.findById(Mockito.any())).thenReturn(courseOptional);
         Course course = courseService.getCourse(Optional.of(BigDecimal.ONE));
         assertNotNull(course);

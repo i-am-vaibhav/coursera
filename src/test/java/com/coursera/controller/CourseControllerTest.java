@@ -49,9 +49,9 @@ class CourseControllerTest {
 
     @Test
     void getCoursesPageWithData() throws Exception {
-        AuthenticatedUser user = new AuthenticatedUser(new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.ADMIN));
+        AuthenticatedUser user = new AuthenticatedUser(new User(BigDecimal.ONE,"Vaibhav","V@gmail.com","Vtest", Role.ADMIN,false));
         List<Course> expectedCourses = new ArrayList<>();
-        expectedCourses.add(new Course(BigDecimal.ONE, "Category 1", "Course 1", "Description 1",null,true));
+        expectedCourses.add(new Course(BigDecimal.ONE, "Category 1", "Course 1", "Description 1",null,true,"Vaibhav"));
         BDDMockito.given(courseService.getCourses(user)).willReturn(expectedCourses);
         MvcResult courses = mockMvc.perform(MockMvcRequestBuilders.get("/courses"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -83,7 +83,7 @@ class CourseControllerTest {
     @Test
     void getCoursesUpdatePageWithCorrectResponse() throws Exception {
         BDDMockito.given(courseService.getCourse(BDDMockito.any(Optional.class))).willReturn(
-                new Course(BigDecimal.ONE, "Category 1", "Course 1", "Description 1",null,true));
+                new Course(BigDecimal.ONE, "Category 1", "Course 1", "Description 1",null,true,"Vaibhav"));
         MvcResult courses = mockMvc.perform(MockMvcRequestBuilders.get("/courses/1.0/update"))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
                 .andExpect(MockMvcResultMatchers.view().name("course/course"))

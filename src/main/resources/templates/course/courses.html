@@ -9,7 +9,7 @@
 <body>
 <div layout:fragment="content" class="container-fluid">
     <h1>Course List</h1>
-    <a th:href="@{/courses/create}" sec:authorize="hasAuthority('ROLE_ADMIN')" class="m-2 btn btn-outline-info">Create</a>
+    <a th:href="@{/courses/create}" sec:authorize="hasAnyAuthority('ROLE_ADMIN','ROLE_CONTRIBUTER')" class="m-2 btn btn-outline-info">Create</a>
 
     <div class="row row-cols-3 row-cols-md-3 g-4">
         <div class="col" th:each="course, i : ${courses}">
@@ -34,7 +34,7 @@
                      </div>
                  </div>
                  <div class="card-footer">
-                     <a th:href="@{'/courses/'+${course.id}+'/enroll'}" sec:authorize="hasAuthority('ROLE_STUDENT')" class="btn btn-outline-success">Enroll</a>  <a th:href="@{'/courses/'+${course.id}+'/update'}" sec:authorize="hasAuthority('ROLE_ADMIN')" class="btn btn-outline-info">Update</a> <a th:href="@{'/courses/'+${course.id}+'/activate'}" sec:authorize="hasAuthority('ROLE_ADMIN')" class="btn btn-outline-info" th:text="${course.active} ? 'Deactivate' : 'Activate'">Activate</a>
+                     <a th:href="@{'/courses/'+${course.id}+'/enroll'}" sec:authorize="hasAuthority('ROLE_STUDENT')" class="btn btn-outline-success">Enroll</a>  <a th:href="@{'/courses/'+${course.id}+'/update'}" sec:authorize="hasAnyAuthority('ROLE_ADMIN','ROLE_CONTRIBUTER')" class="btn btn-outline-info">Update</a> <a th:href="@{'/courses/'+${course.id}+'/activate'}" sec:authorize="hasAnyAuthority('ROLE_ADMIN','ROLE_CONTRIBUTER')" class="btn btn-outline-info" th:text="${course.active} ? 'Deactivate' : 'Activate'">Activate</a>
                  </div>
              </div>
          </div>

@@ -55,7 +55,7 @@ class HomeControllerTest {
     @WithMockUser(username = "Vaibhav",password = "Admin@123",authorities = {"ROLE_ADMIN"})
     void profilePage() throws Exception {
         BDDMockito.given(userService.getUser(BDDMockito.anyString())).willReturn(
-                new User(BigDecimal.ONE,"Vaibhav","v@gmail.com","pwd", Role.STUDENT)
+                new User(BigDecimal.ONE,"Vaibhav","v@gmail.com","pwd", Role.STUDENT,false)
         );
         MvcResult user = mockMvc.perform(MockMvcRequestBuilders.get("/profile"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
