@@ -41,7 +41,7 @@ public class AspectLogging {
             returning = "user")
     public void authenticationNotification(JoinPoint joinPoint, AuthenticatedUser user) {
         if (user != null) {
-            //sendMail(user);
+            sendMail(user);
         }
     }
 
