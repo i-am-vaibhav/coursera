@@ -1,6 +1,10 @@
 package com.coursera.service;
 
+import com.coursera.model.Course;
 import com.coursera.model.User;
+import com.coursera.model.UserCourseDtl;
+import com.coursera.repository.CourseRepository;
+import com.coursera.repository.UserCourseDtlRepository;
 import com.coursera.repository.UserRepository;
 import com.coursera.util.Role;
 import org.junit.jupiter.api.Test;
@@ -13,11 +17,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,6 +28,12 @@ class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private CourseRepository courseRepository;
+
+    @Mock
+    private UserCourseDtlRepository userCourseDtlRepository;
 
     @InjectMocks
     private UserService userService;
@@ -106,6 +115,21 @@ class UserServiceTest {
     @Test
     void deleteUserExceptionScenario() {
         assertThrows(IllegalArgumentException.class,() -> userService.deleteUser(Optional.empty()));
+    }
+
+    @Test
+    void getEnrolledCourses(){
+        when(userRepository.findByUserName(any(String.class))).thenReturn(Optional.of(new User(BigDecimal.ONE, "Vaibhav", "V@gmail.com", "Vtest", Role.STUDENT, false)));
+        when(userCourseDtlRepository.findByUserId(any(BigDecimal.class))).thenReturn(Collections.emptyList());
+        assertEquals(0,userService.getEnrolledCourses("Vaibhav").size());
+    }
+
+    @Test
+    void getEnrolledCoursesWithData(){
+        when(userRepository.findByUserName(any(String.class))).thenReturn(Optional.of(new User(BigDecimal.ONE, "Vaibhav", "V@gmail.com", "Vtest", Role.STUDENT, false)));
+        when(userCourseDtlRepository.findByUserId(any(BigDecimal.class))).thenReturn(Collections.singletonList(new UserCourseDtl(BigDecimal.ONE,BigDecimal.ONE,BigDecimal.ONE,new Date(),new Date())));
+        when(courseRepository.findAllById(any(List.class))).thenReturn(Collections.singletonList(new Course(BigDecimal.ONE,"test","test","test","test",true,"test")));
+        assertEquals(1,userService.getEnrolledCourses("Vaibhav").size());
     }
 
 

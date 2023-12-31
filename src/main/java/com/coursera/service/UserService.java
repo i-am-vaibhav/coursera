@@ -52,8 +52,8 @@ public class UserService {
         userRepository.deleteById(id.orElseThrow(IllegalArgumentException::new));
     }
 
-    public List<Course> getEnrolledCourses() {
-        User user = getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+    public List<Course> getEnrolledCourses(String name) {
+        User user = getUser(name);
         List<UserCourseDtl> userCourseDtls = userCourseDtlRepository.findByUserId(user.getId());
         List<BigDecimal> list = userCourseDtls.stream().map(UserCourseDtl::getCourseId).collect(Collectors.toList());
         return courseRepository.findAllById(list);

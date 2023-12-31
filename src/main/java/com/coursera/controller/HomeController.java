@@ -25,7 +25,8 @@ public class HomeController {
 
     @GetMapping("/home")
     public String homePage(Model model) {
-        model.addAttribute("courses", userService.getEnrolledCourses());
+        String name = SecurityContextHolder.getContext().getAuthentication().getName();
+        model.addAttribute("courses", userService.getEnrolledCourses(name));
         return "home";
     }
 
