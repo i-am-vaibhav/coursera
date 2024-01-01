@@ -106,4 +106,21 @@ class CourseControllerTest {
                 .andReturn();
     }
 
+    @Test
+    void enrollCourse() throws Exception {
+        MvcResult users = mockMvc.perform(MockMvcRequestBuilders.get("/courses/1.0/enroll"))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/home"))
+                .andReturn();
+    }
+
+    @Test
+    void activateCourse() throws Exception {
+        MvcResult users = mockMvc.perform(MockMvcRequestBuilders.get("/courses/1.0/activate"))
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/courses"))
+                .andReturn();
+    }
+
+
 }

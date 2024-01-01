@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.PropertyMapper;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithAnonymousUser;
@@ -48,7 +49,10 @@ class HomeControllerTest {
     @WithMockUser(username = "Vaibhav",roles = {"ADMIN"})
     void homePage() throws Exception {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/home"))
-                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.model().attributeExists("courses"))
+                .andExpect(MockMvcResultMatchers.model().hasNoErrors())
+                .andReturn();
     }
 
     @Test
