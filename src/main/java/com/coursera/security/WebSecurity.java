@@ -2,6 +2,7 @@ package com.coursera.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,11 +21,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurity {
 
+    private final CustomAuthenticationProvider authenticationProvider;
 
-    private final CustomUserDetailsService userDetailService;
-
-    public WebSecurity(CustomUserDetailsService userDetailService) {
-        this.userDetailService = userDetailService;
+    public WebSecurity(CustomAuthenticationProvider authenticationProvider) {
+        this.authenticationProvider = authenticationProvider;
     }
 
     @Bean
@@ -36,8 +36,9 @@ public class WebSecurity {
         http.authorizeRequests().anyRequest().authenticated();
 
         // setting login  page and authentication
-        http.userDetailsService(userDetailService).formLogin().loginPage("/login").loginProcessingUrl("/authenticate")
-                .failureForwardUrl("/login?error")
+        http.authenticationProvider(authenticationProvider).formLogin().loginPage("/login").loginProcessingUrl("/authenticate")
+                .failureForwardUrl("/login")
+                .failureUrl("/login")
                 .defaultSuccessUrl("/home", true);
 
         // setting maximum user sessions and registry
@@ -64,11 +65,6 @@ public class WebSecurity {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers(new AntPathRequestMatcher("*/h2-console/**"));
-    }
-
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
 }
