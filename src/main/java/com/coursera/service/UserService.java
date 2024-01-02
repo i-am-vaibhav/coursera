@@ -58,4 +58,7 @@ public class UserService {
         List<BigDecimal> list = userCourseDtls.stream().map(UserCourseDtl::getCourseId).collect(Collectors.toList());
         return courseRepository.findAllById(list);
     }
+    public void lockUser(Optional<BigDecimal>id){
+
+    }
 }
