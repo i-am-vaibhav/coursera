@@ -29,10 +29,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         log.debug("User trying logging in with "+name);
         AuthenticatedUser authenticatedUser = customUserDetailsService.loadUserByUsername(name);
         if(!bCryptPasswordEncoder.matches(password,authenticatedUser.getPassword())){
-            throw new BadCredentialsException("Incorrect Password");
+            throw new BadCredentialsException("Sorry, that password isn't right!");
         }
         if(authenticatedUser.getUser().getLocked()){
-            throw  new LockedException("Account locked ! please contact admin.");
+            throw  new LockedException("Sorry, Your account is locked! please contact admin.");
         }
         return new UsernamePasswordAuthenticationToken(authenticatedUser,authentication.getCredentials(),authenticatedUser.getAuthorities());
     }
