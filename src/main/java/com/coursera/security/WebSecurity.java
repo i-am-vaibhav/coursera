@@ -13,6 +13,7 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -52,6 +53,8 @@ public class WebSecurity {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS).sessionFixation()
                 .migrateSession();
 
+        http.headers().frameOptions().disable().addHeaderWriter(new StaticHeadersWriter("X-FRAME-OPTIONS",
+                "ALLOW-FROM https://www.youtube.com"));
         return http.build();
     }
 

@@ -38,14 +38,38 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a th:href="@{${course.link}}" target="_blank" class="btn btn-outline-success">Open</a>
+                        <input type="hidden" th:id="${'id'+i.index}" th:value="${course.link}">
+                        <button data-bs-toggle="modal" data-bs-target="#staticBackdrop" th:onclick="'openModal(\''+ ${i.index} + '\');'" class="btn btn-outline-success">Open</button>
+                    </div>
+                </div>
+                <!-- Button trigger modal -->
+
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Video Player</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <iframe width="460" height="315" id="videoFrame" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        function openModal(id){
+            $("#videoFrame").attr("src",$('#id'+id).val());
+        }
+    </script>
 </div>
-
-
 </body>
 </html>
