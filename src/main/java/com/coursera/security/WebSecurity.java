@@ -23,8 +23,11 @@ public class WebSecurity {
 
     private final CustomAuthenticationProvider authenticationProvider;
 
-    public WebSecurity(CustomAuthenticationProvider authenticationProvider) {
+    private final SessionRegistry sessionRegistry;
+
+    public WebSecurity(CustomAuthenticationProvider authenticationProvider, SessionRegistry sessionRegistry) {
         this.authenticationProvider = authenticationProvider;
+        this.sessionRegistry = sessionRegistry;
     }
 
     @Bean
@@ -43,23 +46,13 @@ public class WebSecurity {
 
         // setting maximum user sessions and registry
         http.sessionManagement().maximumSessions(1).maxSessionsPreventsLogin(true)
-                .sessionRegistry(sessionRegistry()).expiredUrl("/login");
+                .sessionRegistry(sessionRegistry).expiredUrl("/login");
 
         // setting the session policy
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS).sessionFixation()
                 .migrateSession();
 
         return http.build();
-    }
-
-    @Bean
-    public SessionRegistry sessionRegistry() {
-        return new SessionRegistryImpl();
-    }
-
-    @Bean
-    public HttpSessionEventPublisher httpSessionEventPublisher() {
-        return new HttpSessionEventPublisher();
     }
 
     @Bean

@@ -14,10 +14,4 @@ public class CourseraApplication {
         SpringApplication.run(CourseraApplication.class, args);
     }
 
-
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
 }
