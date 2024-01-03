@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+
 public class UserService {
 
     private final UserRepository userRepository;
@@ -59,6 +60,12 @@ public class UserService {
         return courseRepository.findAllById(list);
     }
     public void lockUser(Optional<BigDecimal>id){
-
+        User user = getUser(id);
+        if(user.getLocked()){
+            user.setLocked(false);
+        }else {
+            user.setLocked(true);
+        }
+        saveUser(user);
     }
 }
