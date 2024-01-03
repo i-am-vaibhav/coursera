@@ -32,6 +32,7 @@
                             <a th:href="@{'/users/'+ ${user.id} }" class="btn btn-outline-secondary">View</a>
                             <a th:href="@{'/users/'+ ${user.id} + '/update'}" class="btn btn-outline-warning">Update</a>
                             <a th:href="@{'/users/'+ ${user.id} + '/delete'}" class="btn btn-outline-danger">Delete</a>
+                            <a th:href="@{'/users/'+ ${user.id} + '/lock'}" class="btn btn-outline-secondary" th:text="${user.locked==true?'Unlock':'Lock'}" >Lock</a>
                         </div>
                     </td>
                 </tr>
