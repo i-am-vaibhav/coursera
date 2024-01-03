@@ -58,5 +58,10 @@ public class UserController {
         userService.saveUser(user);
         return "redirect:/users";
     }
+    @GetMapping("/{id}/lock")
+    public String lockUser(Model model,@PathVariable("id") Optional<BigDecimal> id){
+        userService.lockUser(id);
+        return "redirect:/users";
+    }
 
 }
