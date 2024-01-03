@@ -34,6 +34,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         if(authenticatedUser.getUser().getLocked()){
             throw  new LockedException("Sorry, Your account is locked! please contact admin.");
         }
+        log.debug("{} User logged in successfully",name);
         return new UsernamePasswordAuthenticationToken(authenticatedUser,authentication.getCredentials(),authenticatedUser.getAuthorities());
     }
 
