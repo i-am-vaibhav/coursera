@@ -2,6 +2,7 @@ package com.coursera.controller;
 
 import com.coursera.model.User;
 import com.coursera.service.UserService;
+import com.coursera.vo.ChangePassword;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,4 +65,14 @@ public class UserController {
         return "redirect:/users";
     }
 
+    /*
+    Redirect Attributes is used to send attributes to redirected API's model
+     */
+    @PostMapping("/password")
+    public  String changePassword(Model model, @ModelAttribute ChangePassword changePassword,
+                                  RedirectAttributes redirectAttributes){
+        redirectAttributes.addFlashAttribute("message"
+                ,userService.changePassword(changePassword));
+        return "redirect:/home";
+    }
 }
