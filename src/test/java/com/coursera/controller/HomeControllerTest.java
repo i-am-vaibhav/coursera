@@ -48,6 +48,9 @@ class HomeControllerTest {
     @Test
     @WithMockUser(username = "Vaibhav",roles = {"ADMIN"})
     void homePage() throws Exception {
+        BDDMockito.given(userService.getUser(BDDMockito.anyString())).willReturn(
+                new User(BigDecimal.ONE,"Vaibhav","v@gmail.com","pwd", Role.STUDENT,false)
+        );
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/home"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.model().attributeExists("courses"))

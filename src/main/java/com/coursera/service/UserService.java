@@ -6,8 +6,10 @@ import com.coursera.model.UserCourseDtl;
 import com.coursera.repository.CourseRepository;
 import com.coursera.repository.UserCourseDtlRepository;
 import com.coursera.repository.UserRepository;
+import com.coursera.vo.ChangePassword;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -23,11 +25,13 @@ public class UserService {
     private final UserCourseDtlRepository userCourseDtlRepository;
 
     private final CourseRepository courseRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserService(UserRepository userRepository, UserCourseDtlRepository userCourseDtlRepository, CourseRepository courseRepository) {
+    public UserService(UserRepository userRepository, UserCourseDtlRepository userCourseDtlRepository, CourseRepository courseRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.userCourseDtlRepository = userCourseDtlRepository;
         this.courseRepository = courseRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     public List<User> getUsers() {
@@ -52,9 +56,9 @@ public class UserService {
         userRepository.deleteById(id.orElseThrow(IllegalArgumentException::new));
     }
 
-    public List<Course> getEnrolledCourses(String name) {
-        User user = getUser(name);
-        List<UserCourseDtl> userCourseDtls = userCourseDtlRepository.findByUserId(user.getId());
+    public List<Course> getEnrolledCourses(Optional<BigDecimal> id) {
+        List<UserCourseDtl> userCourseDtls = userCourseDtlRepository
+                .findByUserId(id.orElseThrow(IllegalArgumentException::new));
         List<BigDecimal> list = userCourseDtls.stream().map(UserCourseDtl::getCourseId).collect(Collectors.toList());
         return courseRepository.findAllById(list);
     }
@@ -66,5 +70,17 @@ public class UserService {
             user.setLocked(true);
         }
         saveUser(user);
+    }
+
+    public String changePassword(ChangePassword changePassword){
+        User user = getUser(Optional.ofNullable(changePassword.id()));
+        if (!bCryptPasswordEncoder.matches(changePassword.oldPassword(), user.getPassword())){
+            return "Sorry, that password isn't right!";
+        } else {
+            String password = bCryptPasswordEncoder.encode(changePassword.newPassword());
+            user.setPassword(password);
+            saveUser(user);
+        }
+        return "Password changed successfully!";
     }
 }

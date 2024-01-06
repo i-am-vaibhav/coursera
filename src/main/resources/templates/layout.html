@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
           integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10/dist/sweetalert2.min.css"
+          integrity="sha256-ZCK10swXv9CN059AmZf9UzWpJS34XvilDMJ79K+WOgc="
+          crossorigin="anonymous">
 </head>
 <body>
 <div class="container-fluid">
@@ -38,12 +41,14 @@
                         <a th:href="@{/enrollments}" sec:authorize="hasAnyAuthority('ROLE_ADMIN','ROLE_CONTRIBUTER')" class="icon-link nav-link link-light px-0 align-middle">
                             <span class="ms-1 d-none d-sm-inline"><i class="fa-solid fa-id-card fa-bounce"></i>&nbsp;Manage Enrollments</span> </a>
                     </li>
+                    <li style="width: 12rem;"><hr></li>
                     <li>
                         <a href="#submenu3" data-bs-toggle="collapse" class="nav-link link-light px-0 align-middle icon-link">
                             <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline"
                                                                sec:authentication="name">Products</span></a>
                         <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
                             <li><a class="nav-link link-light px-0 icon-link" th:href="@{/profile}"><i class="fa-solid fa-bounce fa-id-badge"></i>&nbsp;Profile</a></li>
+                            <li><button data-bs-toggle="modal" data-bs-target="#changePasswordModal" type="button" class="nav-link link-light px-0 icon-link"><i class="fa-solid fa-bounce fa-key"></i> Change Password</button></li>
                             <li>
                                 <form class="d-flex" role="logout" th:action="@{/logout}" method="post">
                                   <button class="nav-link link-warning icon-link link-warning-emphasis px-0" type="submit"><i class="fa-solid fa-right-from-bracket fa-bounce"></i>&nbsp;Logout</button>
@@ -57,6 +62,44 @@
         <div class="col py-3">
             <section class="content" layout:fragment="content"></section>
         </div>
+        <!--Change Password Modal-->
+        <div class="modal fade" id="changePasswordModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" th:action="@{/users/password}" id="changePasswordForm" th:if="${changePassword}" th:object="${changePassword}">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Change Password<span th:if="${user}!=null" th:text="' - '+${user.userName}"></span></h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="id"  th:if="${user}!=null" th:value="${user.id}">
+                            <div class="form-floating m-3">
+                                <input type="password" class="form-control" required id="oldPassword" th:field="*{oldPassword}" placeholder="Enter your password" >
+                                <label for="oldPassword">Password</label>
+                            </div>
+                            <div class="form-floating m-3">
+                                <input type="password" class="form-control" required id="newPassword" th:field="*{newPassword}" placeholder="Enter a new password" >
+                                <label for="newPassword">New Password</label>
+                                <div class="progress m-2" id="progressBox">
+                                    <div id="progress" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div class="form-floating m-3">
+                                <input id="confirmNewPassword" name="confirmNewPassword" type="password" class="form-control" required placeholder="Confirm new password" >
+                                <label for="confirmNewPassword">Confirm New Password</label>
+                            </div>
+                            <div class="alert alert-danger mt-2" id="validationBox" style="display:none;" role="alert" >
+                                <span id="validationMsg"></span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" onclick="changePassword();" class="btn btn-outline-success">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--Change Password Modal Ended-->
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
@@ -65,6 +108,130 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10/dist/sweetalert2.all.min.js"
+        integrity="sha256-iSkyJ41luwYhZX4JnDUop92wix0y8SBGAW5tCnnCfZ4="
+        crossorigin="anonymous"></script>
+<input type="hidden" th:if="${message}" th:value="${message}" id="message">
+<script>
+    $(document).ready(function(){
+        $("#progressBox").css("display","none");
+        $(function(){
+            let msg = $("#message").val();
+            if(msg!=undefined && msg != ''){
+                const Toast = Swal.mixin({
+                  toast: true,
+                  position: "top-end",
+                  showConfirmButton: false,
+                  timer: 3000,
+                  timerProgressBar: true,
+                  didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                  }
+                });
+                Toast.fire({
+                  icon: "info",
+                  title: msg
+                });
+             }
+        });
 
+        document.getElementById("newPassword").addEventListener("keyup", function() {
+          var password = document.getElementById("newPassword").value;
+          var progress = document.getElementById("progress");
+          $("#progressBox").attr("style","");
+          var strength = 0;
+
+          // Check if password length is at least 8 characters
+          if (password.length >= 8) {
+            strength += 20;
+          }
+          // Check for uppercase letters
+          var upperCaseLetters = /[A-Z]/g;
+          if (password.match(upperCaseLetters)) {
+            strength += 20;
+          }
+
+          // Check for lowercase letters
+          var lowerCaseLetters = /[a-z]/g;
+          if (password.match(lowerCaseLetters)) {
+            strength += 20;
+          }
+
+          // Check for numbers
+          var numbers = /[0-9]/g;
+          if (password.match(numbers)) {
+            strength += 20;
+          }
+
+          // Check for special characters
+          var specialCharacters = /[^A-Za-z0-9]/g;
+          if (password.match(specialCharacters)) {
+            strength += 20;
+          }
+
+          // You can add more checks for uppercase, lowercase, numbers, special characters here and adjust the strength accordingly
+
+          // Update the strength indicator based on the calculated strength
+          $("#progress").attr("aria-valuenow",strength);
+          $("#progress").css("width",strength+"%");
+
+          $("#progress").addClass("bg-danger");
+          if(strength >= 80){
+              $("#progress").removeClass("bg-danger");
+              $("#progress").addClass("bg-success");
+          }
+        });
+
+
+
+    });
+
+    function changePassword(){
+        $("#validationBox").css("display","none");
+        if(validateForm()){
+            var strength = $("#progress").attr("aria-valuenow");
+            if(strength < 80){
+                $("#validationBox").css("display","block");
+                $("#validationMsg").text("New password is not strong enough");
+                return false;
+            }
+            $("#changePasswordForm").submit();
+        }
+    }
+
+    function validateForm() {
+      var currentPassword = document.getElementById("oldPassword").value;
+      var newPassword = document.getElementById("newPassword").value;
+      var confirmPassword = document.getElementById("confirmNewPassword").value;
+
+      // Check if any field is empty
+      if (currentPassword === '' || newPassword === '' || confirmPassword === '') {
+        $("#validationBox").css("display","block");
+        $("#validationMsg").text("All fields must be filled out");
+        return false;
+      }
+
+      // Check if the new password matches the confirm password
+      if (newPassword !== confirmPassword) {
+        $("#validationBox").css("display","block");
+        $("#validationMsg").text("New password and confirm password must match");
+        return false;
+      }
+
+      // Check if the new password is the same as the current password
+      if (newPassword === currentPassword) {
+        $("#validationBox").css("display","block");
+        $("#validationMsg").text("New password must be different from the current password");
+        return false;
+      }
+
+      // You can add additional checks for password strength if needed
+
+      // If all validations pass, allow form submission
+      return true;
+    }
+
+</script>
 </body>
 </html>

@@ -119,17 +119,15 @@ class UserServiceTest {
 
     @Test
     void getEnrolledCourses(){
-        when(userRepository.findByUserName(any(String.class))).thenReturn(Optional.of(new User(BigDecimal.ONE, "Vaibhav", "V@gmail.com", "Vtest", Role.STUDENT, false)));
         when(userCourseDtlRepository.findByUserId(any(BigDecimal.class))).thenReturn(Collections.emptyList());
-        assertEquals(0,userService.getEnrolledCourses("Vaibhav").size());
+        assertEquals(0,userService.getEnrolledCourses(Optional.of(BigDecimal.ONE)).size());
     }
 
     @Test
     void getEnrolledCoursesWithData(){
-        when(userRepository.findByUserName(any(String.class))).thenReturn(Optional.of(new User(BigDecimal.ONE, "Vaibhav", "V@gmail.com", "Vtest", Role.STUDENT, false)));
         when(userCourseDtlRepository.findByUserId(any(BigDecimal.class))).thenReturn(Collections.singletonList(new UserCourseDtl(BigDecimal.ONE,BigDecimal.ONE,BigDecimal.ONE,new Date(),new Date())));
         when(courseRepository.findAllById(any(List.class))).thenReturn(Collections.singletonList(new Course(BigDecimal.ONE,"test","test","test","test",true,"test")));
-        assertEquals(1,userService.getEnrolledCourses("Vaibhav").size());
+        assertEquals(1,userService.getEnrolledCourses(Optional.of(BigDecimal.ONE)).size());
     }
 
 

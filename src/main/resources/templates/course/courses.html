@@ -19,7 +19,7 @@
                          <div class="d-flex">
                          <p class="text-start card-title" th:text="${course.name}">Card titlle
                          </p>
-                         <i  th:style="${course.active} ? 'font-size:20px;color : green' : 'font-size:20px;color : red'" th:class="${course.active} ? 'mx-1 fa-regular fa-thumbs-up' : 'mx-1 mt-1 fa-regular fa-thumbs-down'" sec:authorize="hasAuthority('ROLE_ADMIN')"></i>
+                             <span class="badge"><i  th:style="${course.active} ? 'font-size:20px;color : green' : 'font-size:20px;color : red'" th:class="${course.active} ? 'mx-1 fa-regular fa-thumbs-up' : 'mx-1 mt-1 fa-regular fa-thumbs-down'" sec:authorize="hasAuthority('ROLE_ADMIN')"></i></span>
                          </div>
                          <p class="text-start card-subtitle text-muted" th:text="${course.category}">Card subtitle</p>
                      </button>
