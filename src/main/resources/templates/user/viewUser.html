@@ -26,39 +26,12 @@
         <label for="role">Role</label>
       </div>
       <div>
-        <button data-bs-toggle="modal" data-bs-target="#staticBackdrop" type="button" class="btn btn-outline-success">Change Password</button>
+        <button data-bs-toggle="modal" sec:authorize="hasAnyAuthority('ROLE_ADMIN')" data-bs-target="#changePasswordModal" type="button" class="btn btn-outline-success">Change Password</button>
       </div>
     </div>
   </div>
   <a class="link-danger" th:href="@{/home}">Go Back To Home</a>
-  <!--Change Password Modal-->
-  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <form method="post" th:action="@{/users/password}">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="staticBackdropLabel">Change Password - <span th:text="${user.userName}"></span></h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <input type="hidden" name="id" th:value="${user.id}">
-            <div class="form-floating m-3">
-              <input type="text" class="form-control" id="oldPassword" name="password" placeholder="Enter your password" >
-              <label for="oldPassword">Password</label>
-            </div>
-            <div class="form-floating m-3">
-              <input type="text" class="form-control" id="newPassword" name="newPassword" placeholder="Enter a new password" >
-              <label for="newPassword">New Password</label>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-outline-success" >Submit</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-  <!--Change Password Modal Ended-->
+
 </div>
 </body>
 </html>
