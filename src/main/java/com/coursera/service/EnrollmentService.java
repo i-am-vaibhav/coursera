@@ -10,6 +10,7 @@ import com.coursera.repository.UserCourseDtlRepository;
 import com.coursera.security.AuthenticatedUser;
 import com.coursera.util.Role;
 import com.coursera.vo.StudentEnrollments;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -34,7 +35,8 @@ public class EnrollmentService {
 
     public EnrollmentService(CustomJpaRepository customJpaRepository,
                              UserCourseDtlRepository userCourseDtlRepository1,
-                             CourseRepository courseRepository, UserService userService) {
+                             CourseRepository courseRepository,
+                             @Qualifier("userServiceImpl") UserService userService) {
         this.customJpaRepository = customJpaRepository;
         this.userCourseDtlRepository = userCourseDtlRepository1;
         this.courseRepository = courseRepository;

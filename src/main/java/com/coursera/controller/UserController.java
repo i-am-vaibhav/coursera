@@ -3,6 +3,8 @@ package com.coursera.controller;
 import com.coursera.model.User;
 import com.coursera.service.UserService;
 import com.coursera.vo.ChangePassword;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +23,9 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public UserController(
+            @Qualifier("userServiceImpl")
+            UserService userService) {
         this.userService = userService;
     }
 

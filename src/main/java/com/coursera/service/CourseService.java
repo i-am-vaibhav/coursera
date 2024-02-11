@@ -9,6 +9,7 @@ import com.coursera.repository.UserCourseDtlRepository;
 import com.coursera.security.AuthenticatedUser;
 import com.coursera.util.Role;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,8 @@ public class CourseService {
 
     private final static ZoneOffset IST = ZoneOffset.ofHoursMinutes(5, 30);
 
-    public CourseService(CourseRepository userRepository, UserCourseDtlRepository userCourseDtlRepository, UserService userService) {
+    public CourseService(CourseRepository userRepository, UserCourseDtlRepository userCourseDtlRepository,
+                         @Qualifier("userServiceImpl") UserService userService) {
         this.courseRepository = userRepository;
         this.userCourseDtlRepository = userCourseDtlRepository;
         this.userService = userService;

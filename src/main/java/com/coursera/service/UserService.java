@@ -2,85 +2,26 @@ package com.coursera.service;
 
 import com.coursera.model.Course;
 import com.coursera.model.User;
-import com.coursera.model.UserCourseDtl;
-import com.coursera.repository.CourseRepository;
-import com.coursera.repository.UserCourseDtlRepository;
-import com.coursera.repository.UserRepository;
 import com.coursera.vo.ChangePassword;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-@Service
-public class UserService {
+public interface UserService {
+    List<User> getUsers();
 
-    private final UserRepository userRepository;
+    User getUser(Optional<BigDecimal> id);
 
-    private final UserCourseDtlRepository userCourseDtlRepository;
+    User getUser(String userName);
 
-    private final CourseRepository courseRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    User saveUser(User user);
 
-    public UserService(UserRepository userRepository, UserCourseDtlRepository userCourseDtlRepository, CourseRepository courseRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.userRepository = userRepository;
-        this.userCourseDtlRepository = userCourseDtlRepository;
-        this.courseRepository = courseRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
+    void deleteUser(Optional<BigDecimal> id);
 
-    public List<User> getUsers() {
-        return userRepository.findAll();
-    }
+    List<Course> getEnrolledCourses(Optional<BigDecimal> id);
 
-    public User getUser(Optional<BigDecimal> id) {
-        return userRepository.findById(id.orElseThrow(IllegalArgumentException::new))
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with " + id.get()));
-    }
+    void lockUser(Optional<BigDecimal> id);
 
-    public User getUser(String userName) {
-        return userRepository.findByUserName(userName)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with " + userName));
-    }
-
-    public User saveUser(User user) {
-        return userRepository.save(user);
-    }
-
-    public void deleteUser(Optional<BigDecimal> id) {
-        userRepository.deleteById(id.orElseThrow(IllegalArgumentException::new));
-    }
-
-    public List<Course> getEnrolledCourses(Optional<BigDecimal> id) {
-        List<UserCourseDtl> userCourseDtls = userCourseDtlRepository
-                .findByUserId(id.orElseThrow(IllegalArgumentException::new));
-        List<BigDecimal> list = userCourseDtls.stream().map(UserCourseDtl::getCourseId).collect(Collectors.toList());
-        return courseRepository.findAllById(list);
-    }
-    public void lockUser(Optional<BigDecimal>id){
-        User user = getUser(id);
-        if(user.getLocked()){
-            user.setLocked(false);
-        }else {
-            user.setLocked(true);
-        }
-        saveUser(user);
-    }
-
-    public String changePassword(ChangePassword changePassword){
-        User user = getUser(Optional.ofNullable(changePassword.id()));
-        if (!bCryptPasswordEncoder.matches(changePassword.oldPassword(), user.getPassword())){
-            return "Sorry, that password isn't right!";
-        } else {
-            String password = bCryptPasswordEncoder.encode(changePassword.newPassword());
-            user.setPassword(password);
-            saveUser(user);
-        }
-        return "Password changed successfully!";
-    }
+    String changePassword(ChangePassword changePassword);
 }
