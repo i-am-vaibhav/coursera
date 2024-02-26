@@ -1,8 +1,8 @@
 package com.coursera.controller;
 
 import com.coursera.model.Course;
-import com.coursera.security.AuthenticatedUser;
 import com.coursera.service.CourseService;
+import com.coursera.service.CourseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;

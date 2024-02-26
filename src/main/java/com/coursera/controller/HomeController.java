@@ -19,8 +19,7 @@ import java.util.Optional;
 public class HomeController {
     private final UserService userService;
 
-    public HomeController(
-            @Qualifier("userServiceImpl") UserService userService) {
+    public HomeController(UserService userService) {
         this.userService = userService;
     }
 

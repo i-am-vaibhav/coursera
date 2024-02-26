@@ -36,7 +36,7 @@ class UserServiceTest {
     private UserCourseDtlRepository userCourseDtlRepository;
 
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Test
     void getUsers() {
